@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Utils\**" />
+    <Content Remove="Utils\**" />
+    <EmbeddedResource Remove="Utils\**" />
+    <None Remove="Utils\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BlazorNotifyException.cs" />
+    <Compile Remove="BlazorNotifyJsInterop.cs" />
+    <Compile Remove="Model\Result.cs" />
+    <Compile Remove="Model\Vapid.cs" />
+    <Compile Remove="NotificationIcon.cs" />
+    <Compile Remove="NotificationOptions.cs" />
+    <Compile Remove="Service\BlazorNotifyJsInterop.cs" />
+    <Compile Remove="Service\ServiceCollectionExtensions.cs" />
+    <Compile Remove="Service\SqliteApplicationBuilderExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3" />
+    <PackageReference Include="Lib.AspNetCore.WebPush" Version="2.0.0" />
+    <PackageReference Include="Lib.Net.Http.WebPush" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

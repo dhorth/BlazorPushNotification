@@ -1,0 +1,16 @@
+﻿.card {
+    margin-bottom: 20px;
+    width: 98% !important;
+}
+
+.buttons {
+}
+
+span {
+    font-weight: bold;
+    width: 200px;
+    text-align: right;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

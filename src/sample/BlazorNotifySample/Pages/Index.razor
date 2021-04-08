@@ -1,0 +1,88 @@
+﻿@page "/"
+@inject IBlazorNotificationService PushService
+
+<div class="content px-4">
+    <h3>Blazor Notify Sample App</h3>
+    <hr />
+    <span>Permission: @permissionType</span><br />
+    <span>Subscribed: @subscriptionStatus</span><br />
+    <div>
+        <div id="dashboard-controls">
+            <button class="btn btn-info" @onclick="Subscribe">Subscribe for Push Notifications</button>
+            <button class="btn btn-info" @onclick="Unsubscribe">Unsubscribe from Push Notifications</button>
+            <br /><hr />
+            <span>Topic:</span>
+            <input type="text" id="topic" size="32" maxlength="32" @bind="topic" /><br />
+
+            <span>Urgency:</span>
+            <select id="urgency" @bind="urgency">
+                <option value="VeryLow">Very Low</option>
+                <option value="Low">Low</option>
+                <option value="Normal" selected="selected">Normal</option>
+                <option value="High">High</option>
+            </select><br />
+            <span>Message:</span>
+            <input id="notification" size="65"  @bind="message"/>
+            <br/>
+            <button class="btn btn-primary" @onclick="SendNotification">Send Push Notification</button>
+        </div>
+        <hr />
+        <div id="dashboard-console">
+            <label>Log:</label>
+            <div id="output"></div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private PermissionType permissionType;
+    private SubscriptionStatus subscriptionStatus;
+
+    private string topic;
+    private PushMessageUrgency urgency;
+    private string message;
+
+    protected override void OnInitialized()
+    {
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await Refresh();
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private async Task Subscribe()
+    {
+        await PushService.Subscribe();
+        await Refresh();
+    }
+
+    private async Task Unsubscribe()
+    {
+        await PushService.UnSubscribe();
+        await Refresh();
+    }
+
+    private async Task SendNotification()
+    {
+        await PushService.NotifyAsync(topic,message,urgency);
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        permissionType = await PushService.RequestPermissionAsync();
+        subscriptionStatus = await PushService.GetSubscriptionStatus();
+        await InvokeAsync(() => { StateHasChanged(); });
+    }
+}
