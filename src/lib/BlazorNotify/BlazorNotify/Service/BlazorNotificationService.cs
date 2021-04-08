@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using BlazorNotify.Model;
 using BlazorNotify.SqlLite;
@@ -26,30 +28,30 @@ namespace BlazorNotify.Service
 
     public interface IBlazorNotificationService
     {
-        Task<bool> IsBrowserSupported { get; }
         Task<string> GetPublicKey();
         Task<bool> Subscribe();
         Task<bool> UnSubscribe();
         Task<PermissionType> RequestPermissionAsync();
         Task<SubscriptionStatus> GetSubscriptionStatus();
         Task<string> SaveSubscribe();
-        Task<bool> NotifyAsync(string title, string message, PushMessageUrgency icon);
+        Task<bool> NotifyAsync(string title, string message);
     }
     public class BlazorNotificationService : IBlazorNotificationService, IDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
         private readonly IPushSubscriptionStore _subscriptionStore;
-        private readonly IPushNotificationService _notificationService;
         private readonly IPushNotificationsQueue _pushNotificationsQueue;
+        private readonly PushServiceClient _pushClient;
 
-        public Task<bool> IsBrowserSupported => throw new NotImplementedException();
 
-        public BlazorNotificationService(IJSRuntime jsRuntime, IPushSubscriptionStore subscriptionStore, IPushNotificationService notificationService, IPushNotificationsQueue pushNotificationsQueue)
+        public BlazorNotificationService(IJSRuntime jsRuntime, 
+            PushServiceClient pushClient, 
+            IPushSubscriptionStore subscriptionStore, 
+            IPushNotificationsQueue pushNotificationsQueue)
         {
-            _moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-               "import", "./_content/BlazorNotify/pushNotifications.js").AsTask());
+            _moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BlazorNotify/pushNotifications.js").AsTask());
+            _pushClient = pushClient;
             _subscriptionStore = subscriptionStore;
-            _notificationService = notificationService;
             _pushNotificationsQueue = pushNotificationsQueue;
         }
 
@@ -59,7 +61,7 @@ namespace BlazorNotify.Service
             try
             {
                 var module = await _moduleTask.Value;
-                var subscription = await module.InvokeAsync<PushSubscription>("subscribeForPushNotifications", _notificationService.PublicKey);
+                var subscription = await module.InvokeAsync<PushSubscription>("subscribeForPushNotifications", _pushClient.DefaultAuthentication.PublicKey);
                 await _subscriptionStore.StoreSubscriptionAsync(subscription);
 
             }
@@ -109,7 +111,7 @@ namespace BlazorNotify.Service
 
                 if (string.IsNullOrWhiteSpace(subscription))
                     ret = SubscriptionStatus.Default;
-                else if (subscription.Equals(_notificationService.PublicKey))
+                else if (subscription.Equals(_pushClient.DefaultAuthentication.PublicKey))
                     return SubscriptionStatus.Granted;
                 else
                     return SubscriptionStatus.Denied;
@@ -143,7 +145,7 @@ namespace BlazorNotify.Service
             return PermissionType.Default;
         }
 
-        public async Task<bool> NotifyAsync(string topic, string message, PushMessageUrgency urgency)
+        public async Task<bool> NotifyAsync(string topic, string message)
         {
             bool rc = false;
             try
@@ -179,6 +181,7 @@ namespace BlazorNotify.Service
         {
             throw new NotImplementedException();
         }
+
 
 
 

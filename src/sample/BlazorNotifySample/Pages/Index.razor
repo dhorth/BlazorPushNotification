@@ -13,23 +13,10 @@
             <br /><hr />
             <span>Topic:</span>
             <input type="text" id="topic" size="32" maxlength="32" @bind="topic" /><br />
-
-            <span>Urgency:</span>
-            <select id="urgency" @bind="urgency">
-                <option value="VeryLow">Very Low</option>
-                <option value="Low">Low</option>
-                <option value="Normal" selected="selected">Normal</option>
-                <option value="High">High</option>
-            </select><br />
             <span>Message:</span>
             <input id="notification" size="65"  @bind="message"/>
             <br/>
             <button class="btn btn-primary" @onclick="SendNotification">Send Push Notification</button>
-        </div>
-        <hr />
-        <div id="dashboard-console">
-            <label>Log:</label>
-            <div id="output"></div>
         </div>
     </div>
 </div>
@@ -38,9 +25,8 @@
     private PermissionType permissionType;
     private SubscriptionStatus subscriptionStatus;
 
-    private string topic;
-    private PushMessageUrgency urgency;
-    private string message;
+    private string topic="Test Message";
+    private string message="Message body test goes here.";
 
     protected override void OnInitialized()
     {
@@ -58,6 +44,7 @@
         }
         catch (Exception ex)
         {
+            Log.Logger.Error("OnAfterRenderAsync",ex);
         }
     }
 
@@ -75,7 +62,7 @@
 
     private async Task SendNotification()
     {
-        await PushService.NotifyAsync(topic,message,urgency);
+        await PushService.NotifyAsync(topic,message);
         await Refresh();
     }
 

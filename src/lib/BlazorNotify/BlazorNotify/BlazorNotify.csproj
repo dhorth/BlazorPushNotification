@@ -19,6 +19,7 @@
     <Compile Remove="NotificationIcon.cs" />
     <Compile Remove="NotificationOptions.cs" />
     <Compile Remove="Service\BlazorNotifyJsInterop.cs" />
+    <Compile Remove="Service\PushServicePushNotificationService.cs" />
     <Compile Remove="Service\ServiceCollectionExtensions.cs" />
     <Compile Remove="Service\SqliteApplicationBuilderExtensions.cs" />
   </ItemGroup>

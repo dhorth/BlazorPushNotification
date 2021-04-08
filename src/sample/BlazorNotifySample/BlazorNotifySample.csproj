@@ -4,7 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup><!--<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  <ItemGroup>
+    <!--<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson"  />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"/>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
@@ -13,7 +14,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"  />-->
     <!--<PackageReference Include="WebPush" Version="1.0.11" />-->
-  
+    <PackageReference Include="Serilog.AspNetCore" Version="4.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Http" Version="7.2.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+
     <None Remove="Pages\Index.razor.css" />
   </ItemGroup>
 
