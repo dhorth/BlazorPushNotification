@@ -11,14 +11,12 @@ namespace BlazorNotify.SqlLite
             public string P256DH
             {
                 get { return GetKey(WebPush.PushEncryptionKeyName.P256DH); }
-
                 set { SetKey(WebPush.PushEncryptionKeyName.P256DH, value); }
             }
 
             public string Auth
             {
                 get { return GetKey(WebPush.PushEncryptionKeyName.Auth); }
-
                 set { SetKey(WebPush.PushEncryptionKeyName.Auth, value); }
             }
 

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorNotifySample", "src\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorLocalStorage", "src\lib\BlazorLocalStorage\BlazorLocalStorage.csproj", "{BAC50126-8114-4ABD-8976-262D6487D304}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorNotifyConsole", "src\sample\BlazorNotifyConsole\BlazorNotifyConsole.csproj", "{AECACD93-D014-4C05-9A16-5729B381CF08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{BAC50126-8114-4ABD-8976-262D6487D304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAC50126-8114-4ABD-8976-262D6487D304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAC50126-8114-4ABD-8976-262D6487D304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECACD93-D014-4C05-9A16-5729B381CF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECACD93-D014-4C05-9A16-5729B381CF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECACD93-D014-4C05-9A16-5729B381CF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECACD93-D014-4C05-9A16-5729B381CF08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B1D68AE4-8A76-48DB-A7FD-81F28F76773B} = {7529C7F9-EB00-4036-9256-EEFB9E914C86}
+		{AECACD93-D014-4C05-9A16-5729B381CF08} = {7529C7F9-EB00-4036-9256-EEFB9E914C86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD6283F7-C41F-4E42-94A3-318C6BD66EB9}

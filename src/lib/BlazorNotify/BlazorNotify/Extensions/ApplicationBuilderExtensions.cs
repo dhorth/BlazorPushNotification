@@ -9,8 +9,7 @@ namespace BlazorNotify.Service
     {
         public static IApplicationBuilder UsePushSubscriptionStore(this IApplicationBuilder app)
         {
-                app.UseSqlitePushSubscriptionStore();
-
+            app.UseSqlitePushSubscriptionStore();
             return app;
         }
 
@@ -18,7 +17,7 @@ namespace BlazorNotify.Service
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                PushSubscriptionContext context = serviceScope.ServiceProvider.GetService<PushSubscriptionContext>();
+                var context = serviceScope.ServiceProvider.GetService<PushSubscriptionContext>();
                 context.Database.EnsureCreated();
             }
 

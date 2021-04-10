@@ -15,6 +15,7 @@
     <Compile Remove="BlazorNotifyException.cs" />
     <Compile Remove="BlazorNotifyJsInterop.cs" />
     <Compile Remove="Model\Result.cs" />
+    <Compile Remove="Model\Subscription.cs" />
     <Compile Remove="Model\Vapid.cs" />
     <Compile Remove="NotificationIcon.cs" />
     <Compile Remove="NotificationOptions.cs" />

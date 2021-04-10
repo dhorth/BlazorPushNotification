@@ -28,13 +28,11 @@ namespace BlazorNotify.Service
 
     public interface IBlazorNotificationService
     {
-        Task<string> GetPublicKey();
-        Task<bool> Subscribe();
-        Task<bool> UnSubscribe();
-        Task<PermissionType> RequestPermissionAsync();
-        Task<SubscriptionStatus> GetSubscriptionStatus();
-        Task<string> SaveSubscribe();
-        Task<bool> NotifyAsync(string title, string message);
+        ValueTask<bool> Subscribe();
+        ValueTask<bool> UnSubscribe();
+        ValueTask<PermissionType> RequestPermissionAsync();
+        ValueTask<SubscriptionStatus> GetSubscriptionStatus();
+        ValueTask<bool> NotifyAsync(string title, string message);
     }
     public class BlazorNotificationService : IBlazorNotificationService, IDisposable
     {
@@ -44,9 +42,9 @@ namespace BlazorNotify.Service
         private readonly PushServiceClient _pushClient;
 
 
-        public BlazorNotificationService(IJSRuntime jsRuntime, 
-            PushServiceClient pushClient, 
-            IPushSubscriptionStore subscriptionStore, 
+        public BlazorNotificationService(IJSRuntime jsRuntime,
+            PushServiceClient pushClient,
+            IPushSubscriptionStore subscriptionStore,
             IPushNotificationsQueue pushNotificationsQueue)
         {
             _moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BlazorNotify/pushNotifications.js").AsTask());
@@ -55,113 +53,109 @@ namespace BlazorNotify.Service
             _pushNotificationsQueue = pushNotificationsQueue;
         }
 
-        public async Task<bool> Subscribe()
+        public async ValueTask<bool> Subscribe()
         {
             bool rc = false;
             try
             {
+                Log.Logger.Debug("Subscribe and save subscription");
                 var module = await _moduleTask.Value;
                 var subscription = await module.InvokeAsync<PushSubscription>("subscribeForPushNotifications", _pushClient.DefaultAuthentication.PublicKey);
                 await _subscriptionStore.StoreSubscriptionAsync(subscription);
-
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("", ex);
+                Log.Logger.Error("Subscribe", ex);
             }
+            Log.Logger.Information($"Subscribe() => {rc}");
             return rc;
         }
-        public async Task<bool> UnSubscribe()
+        public async ValueTask<bool> UnSubscribe()
         {
             bool rc = false;
             try
             {
+                Log.Logger.Debug("UnSubscribe and remove subscription");
                 var module = await _moduleTask.Value;
                 var subscription = await module.InvokeAsync<PushSubscription>("unsubscribeFromPushNotifications");
                 await _subscriptionStore.DiscardSubscriptionAsync(subscription.Endpoint);
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("", ex);
+                Log.Logger.Error("UnSubscribe", ex);
             }
+            Log.Logger.Information($"UnSubscribe() => {rc}");
             return rc;
         }
 
-        public async Task<bool> IsSupportedByBrowserAsync()
+        public async ValueTask<SubscriptionStatus> GetSubscriptionStatus()
         {
-            bool rc = false;
+            var ret = SubscriptionStatus.Default;
             try
             {
-                var module = await _moduleTask.Value;
-                rc = await module.InvokeAsync<bool>("showPrompt", "test");
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.Error("", ex);
-            }
-            return rc;
-        }
-        public async Task<SubscriptionStatus> GetSubscriptionStatus()
-        {
-            SubscriptionStatus ret = SubscriptionStatus.Default;
-            try
-            {
+                Log.Logger.Debug("GetSubscriptionStatus()");
                 var module = await _moduleTask.Value;
                 var subscription = await module.InvokeAsync<string>("getSubscription");
 
                 if (string.IsNullOrWhiteSpace(subscription))
                     ret = SubscriptionStatus.Default;
                 else if (subscription.Equals(_pushClient.DefaultAuthentication.PublicKey))
-                    return SubscriptionStatus.Granted;
+                    ret = SubscriptionStatus.Granted;
                 else
-                    return SubscriptionStatus.Denied;
+                    ret = SubscriptionStatus.Denied;
 
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("", ex);
+                Log.Logger.Error("GetSubscriptionStatus", ex);
             }
-
+            Log.Logger.Information($"GetSubscriptionStatus() => {ret}");
             return ret;
         }
-        public async Task<PermissionType> RequestPermissionAsync()
+        public async ValueTask<PermissionType> RequestPermissionAsync()
         {
+            var ret = PermissionType.Default;
             try
             {
+                Log.Logger.Debug("RequestPermissionAsync()");
                 var module = await _moduleTask.Value;
                 string permission = await module.InvokeAsync<string>("requestPermission");
 
                 if (permission.Equals("granted", StringComparison.InvariantCultureIgnoreCase))
-                    return PermissionType.Granted;
+                    ret = PermissionType.Granted;
 
                 if (permission.Equals("denied", StringComparison.InvariantCultureIgnoreCase))
-                    return PermissionType.Denied;
+                    ret = PermissionType.Denied;
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("", ex);
+                Log.Logger.Error("RequestPermissionAsync", ex);
             }
-
-            return PermissionType.Default;
+            Log.Logger.Information($"RequestPermissionAsync() => {ret}");
+            return ret;
         }
-
-        public async Task<bool> NotifyAsync(string topic, string message)
+        public async ValueTask<bool> NotifyAsync(string topic, string message)
         {
             bool rc = false;
             try
             {
-                var content = new BlazorNotifyMessage
+                await Task.Run(() =>
                 {
-                    Title = topic,
-                    Body = message,
-                    Icon = "",
-                    Url = "",
-                };
+                    Log.Logger.Debug($"NotifyAsync({topic},{message})");
+                    var content = new BlazorNotifyMessage
+                    {
+                        Title = topic,
+                        Body = message,
+                        Icon = "",
+                        Url = "",
+                    };
 
-                _pushNotificationsQueue.Enqueue(new PushMessage(content.ToJson())
-                {
-                    Topic = topic,
-                    Urgency = PushMessageUrgency.High
+                    _pushNotificationsQueue.Enqueue(new PushMessage(content.ToJson())
+                    {
+                        Topic = topic,
+                        Urgency = PushMessageUrgency.High
+                    });
+                    rc = true;
                 });
             }
             catch (Exception ex)
@@ -169,21 +163,9 @@ namespace BlazorNotify.Service
                 Log.Logger.Error($"NotifyAsync {topic}", ex);
                 rc = false;
             }
+            Log.Logger.Information($"NotifyAsync({topic},{message}) => {rc}");
             return rc;
         }
-
-
-        public Task<string> GetPublicKey()
-        {
-            throw new NotImplementedException();
-        }
-        public Task<string> SaveSubscribe()
-        {
-            throw new NotImplementedException();
-        }
-
-
-
 
         public void Dispose()
         {

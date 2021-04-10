@@ -29,16 +29,13 @@ namespace BlazorNotify.SqlLite
         public Task StoreSubscriptionAsync(PushSubscription subscription)
         {
             _context.Subscriptions.Add(new PushSubscriptionContext.PushSubscription(subscription));
-
             return _context.SaveChangesAsync();
         }
 
         public async Task DiscardSubscriptionAsync(string endpoint)
         {
             PushSubscriptionContext.PushSubscription subscription = await _context.Subscriptions.FindAsync(endpoint);
-
             _context.Subscriptions.Remove(subscription);
-
             await _context.SaveChangesAsync();
         }
 

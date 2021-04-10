@@ -1,11 +1,11 @@
 ﻿{
-  "short_name": "Blazing Notify Same",
+  "short_name": "Blazing Notify Sample",
   "name": "Blazing Notify",
   "icons": [
     {
-      "src": "img/icon-512.png",
+      "src": "img/loop_48.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "48x48"
     }
   ],
   "start_url": "/",
