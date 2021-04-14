@@ -62,6 +62,7 @@ namespace BlazorNotify.Service
                 var module = await _moduleTask.Value;
                 var subscription = await module.InvokeAsync<PushSubscription>("subscribeForPushNotifications", _pushClient.DefaultAuthentication.PublicKey);
                 await _subscriptionStore.StoreSubscriptionAsync(subscription);
+                rc=true;
             }
             catch (Exception ex)
             {
@@ -79,6 +80,7 @@ namespace BlazorNotify.Service
                 var module = await _moduleTask.Value;
                 var subscription = await module.InvokeAsync<PushSubscription>("unsubscribeFromPushNotifications");
                 await _subscriptionStore.DiscardSubscriptionAsync(subscription.Endpoint);
+                rc=true;
             }
             catch (Exception ex)
             {
@@ -95,11 +97,11 @@ namespace BlazorNotify.Service
             {
                 Log.Logger.Debug("GetSubscriptionStatus()");
                 var module = await _moduleTask.Value;
-                var subscription = await module.InvokeAsync<string>("getSubscription");
+                var subscription = await module.InvokeAsync<PushSubscription>("getSubscription");
 
-                if (string.IsNullOrWhiteSpace(subscription))
+                if (subscription==null)
                     ret = SubscriptionStatus.Default;
-                else if (subscription.Equals(_pushClient.DefaultAuthentication.PublicKey))
+                else if (subscription.Keys.ContainsKey("auth") && !string.IsNullOrWhiteSpace(subscription.Keys["auth"]))
                     ret = SubscriptionStatus.Granted;
                 else
                     ret = SubscriptionStatus.Denied;

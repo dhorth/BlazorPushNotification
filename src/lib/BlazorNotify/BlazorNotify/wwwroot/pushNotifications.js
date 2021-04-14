@@ -11,7 +11,7 @@ export function getSubscription() {
     // We need the service worker registration to check for a subscription
     var ret= navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
         return serviceWorkerRegistration.pushManager.getSubscription().then(function (pushSubscription) {
-            return pushSubscription.endpoint;
+            return pushSubscription;
         }).catch(function (error) {
             console.log('Failed to get subscription from Push Notifications: ' + error);
         });

@@ -22,7 +22,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\BlazorLocalStorage\BlazorLocalStorage.csproj" />
     <ProjectReference Include="..\..\lib\BlazorNotify\BlazorNotify\BlazorNotify.csproj" />
   </ItemGroup>
 

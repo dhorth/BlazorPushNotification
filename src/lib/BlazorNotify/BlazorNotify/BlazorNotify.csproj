@@ -4,26 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Utils\**" />
-    <Content Remove="Utils\**" />
-    <EmbeddedResource Remove="Utils\**" />
-    <None Remove="Utils\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="BlazorNotifyException.cs" />
-    <Compile Remove="BlazorNotifyJsInterop.cs" />
-    <Compile Remove="Model\Result.cs" />
-    <Compile Remove="Model\Subscription.cs" />
-    <Compile Remove="Model\Vapid.cs" />
-    <Compile Remove="NotificationIcon.cs" />
-    <Compile Remove="NotificationOptions.cs" />
-    <Compile Remove="Service\BlazorNotifyJsInterop.cs" />
-    <Compile Remove="Service\PushServicePushNotificationService.cs" />
-    <Compile Remove="Service\ServiceCollectionExtensions.cs" />
-    <Compile Remove="Service\SqliteApplicationBuilderExtensions.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

@@ -31,7 +31,6 @@ self.addEventListener('push', event => {
             data: { url: url }
         })
     );
-
 });
 
 self.addEventListener('notificationclick', event => {
